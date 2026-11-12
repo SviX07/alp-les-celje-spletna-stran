@@ -23,7 +23,7 @@
   }
 
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; scroll-padding-top: calc(72px + env(safe-area-inset-top, 0px)); }
   body {
     background: var(--bg); color: var(--fg);
     font-family: var(--font-body); font-size: 17px; line-height: 1.55;
@@ -60,7 +60,7 @@
   .head-nav { display: flex; gap: 30px; margin-right: 20px; }
   .head-nav a { text-decoration: none; font-weight: 600; font-size: .98rem; }
   .head-nav a:hover { text-decoration: underline; text-underline-offset: 4px; }
-  .lang, .mobile-nav {
+  .lang {
     appearance: none; -webkit-appearance: none; flex: none;
     background-color: var(--amber); color: var(--fg);
     border: 2px solid #000; border-radius: 6px;
@@ -69,7 +69,52 @@
     background-position: calc(100% - 14px) 17px, calc(100% - 9px) 17px;
     background-size: 5px 5px; background-repeat: no-repeat;
   }
-  .mobile-nav { display: none; }
+
+  /* mobile menu: hamburger button + dropdown panel (nav links + language picker) */
+  .menu-btn {
+    display: none; flex: none; position: relative; width: 44px; height: 44px; padding: 0;
+    background: transparent; border: 2px solid #000; border-radius: 6px; cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .menu-btn span {
+    position: absolute; left: 9px; right: 9px; top: calc(50% - 1.25px); height: 2.5px;
+    background: var(--fg); border-radius: 2px;
+    transition: transform .25s ease, opacity .2s ease;
+  }
+  .menu-btn span:nth-child(1) { transform: translateY(-7px); }
+  .menu-btn span:nth-child(3) { transform: translateY(7px); }
+  .menu-btn.open span:nth-child(1) { transform: rotate(45deg); }
+  .menu-btn.open span:nth-child(2) { opacity: 0; }
+  .menu-btn.open span:nth-child(3) { transform: rotate(-45deg); }
+
+  .menu-panel {
+    display: none; position: absolute; top: 100%; left: 0; right: 0;
+    background: var(--amber); border-bottom: 1px solid rgba(43, 29, 14, .18);
+    box-shadow: 0 14px 24px rgba(43, 29, 14, .2);
+    max-height: calc(100vh - 80px); overflow-y: auto;
+    visibility: hidden; opacity: 0; transform: translateY(-8px);
+    transition: opacity .2s ease, transform .2s ease, visibility 0s linear .2s;
+  }
+  .menu-panel.open { visibility: visible; opacity: 1; transform: none; transition-delay: 0s; }
+  .menu-panel .wrap { display: grid; gap: 22px; padding-block: 6px 22px; }
+  .menu-links { display: grid; }
+  .menu-links a {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 15px 2px; min-height: 52px; text-decoration: none;
+    font-family: var(--font-display); font-size: 1.2rem; color: var(--fg);
+    border-bottom: 1px solid rgba(43, 29, 14, .16);
+  }
+  .menu-links a::after { content: "\203A"; font-size: 1.6rem; line-height: 1; color: var(--brown); }
+  .menu-links a:active { background: rgba(43, 29, 14, .07); }
+  .menu-lang-title { font-size: .78rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--brown); margin-bottom: 10px; }
+  .menu-lang-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .menu-lang-list button {
+    flex: 1 1 calc(33.333% - 8px); min-height: 44px; padding: 0 10px;
+    background: transparent; color: var(--fg); border: 2px solid #000; border-radius: 6px;
+    font: 700 .95rem var(--font-body); cursor: pointer;
+  }
+  .menu-lang-list button[aria-pressed="true"] { background: var(--fg); color: var(--amber); border-color: var(--fg); }
+
   /* hero */
   .hero { position: relative; isolation: isolate; color: #fff; background: #8A6A3A; }
   .hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 32% 55%; z-index: -2; }
@@ -154,15 +199,14 @@
   footer .draft { font-weight: 700; }
 
   @media (max-width: 860px) {
-    .head-nav { display: none; }
-    .mobile-nav { display: block; flex: 1; min-width: 0; text-align: center; }
+    .head-nav, .lang { display: none; }
+    .menu-btn { display: block; }
+    .menu-panel { display: block; }
+    .site-head .wrap { min-height: 64px; }
     .cards { grid-template-columns: 1fr; }
   }
   @media (max-width: 640px) {
     body { font-size: 16px; }
-    .site-head .wrap { flex-wrap: wrap; padding-block: 8px; }
-    .brand { flex: 1 0 100%; }
-    .mobile-nav { flex: 1 1 auto; width: 0; }
     .tiles { grid-template-columns: 1fr; }
     .tile, .tile.big { grid-column: auto; }
     .brand img { width: 40px; height: 48px; }
@@ -187,13 +231,6 @@
       <a href="#pomembne-informacije" data-i18n="nav_info">Pomembne informacije</a>
       <a href="#kontakt" data-i18n="nav_contact">Kontakt</a>
     </nav>
-    <label for="mobile-nav" style="position:absolute;left:-9999px" data-i18n="nav_menu_label">Navigacija</label>
-    <select id="mobile-nav" class="mobile-nav">
-      <option value="" selected data-i18n="nav_menu">Meni</option>
-      <option value="#objekti" data-i18n="nav_objects">Objekti</option>
-      <option value="#pomembne-informacije" data-i18n="nav_info">Pomembne informacije</option>
-      <option value="#kontakt" data-i18n="nav_contact">Kontakt</option>
-    </select>
     <label for="lang" style="position:absolute;left:-9999px">Language</label>
     <select id="lang" class="lang">
       <option value="sl" title="Slovenščina">SI</option>
@@ -203,6 +240,27 @@
       <option value="hr" title="Hrvatski">HR</option>
       <option value="sr" title="Srpski">SRB</option>
     </select>
+    <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="menu-panel" aria-label="Meni"><span></span><span></span><span></span></button>
+  </div>
+  <div class="menu-panel" id="menu-panel">
+    <div class="wrap">
+      <nav class="menu-links" aria-label="Navigacija">
+        <a href="#objekti" data-i18n="nav_objects">Objekti</a>
+        <a href="#pomembne-informacije" data-i18n="nav_info">Pomembne informacije</a>
+        <a href="#kontakt" data-i18n="nav_contact">Kontakt</a>
+      </nav>
+      <div>
+        <div class="menu-lang-title" data-i18n="nav_lang">Jezik</div>
+        <div class="menu-lang-list" role="group" aria-label="Language">
+          <button type="button" data-lang="sl" lang="sl">Slovenščina</button>
+          <button type="button" data-lang="de" lang="de">Deutsch</button>
+          <button type="button" data-lang="it" lang="it">Italiano</button>
+          <button type="button" data-lang="en" lang="en">English</button>
+          <button type="button" data-lang="hr" lang="hr">Hrvatski</button>
+          <button type="button" data-lang="sr" lang="sr">Srpski</button>
+        </div>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -280,7 +338,7 @@
 <script>
 (function () {
   var T = {
-    sl: { nav_objects:"Objekti", nav_info:"Pomembne informacije", nav_contact:"Kontakt", nav_menu:"Meni", nav_menu_label:"Navigacija",
+    sl: { nav_lang:"Jezik", nav_objects:"Objekti", nav_info:"Pomembne informacije", nav_contact:"Kontakt", nav_menu:"Meni", nav_menu_label:"Navigacija",
       hero_title:"Brunarice", hero_lead:"Družba za proizvodnjo in trženje lesenih objektov",
       hero_sub:"Lesene hiše, vrtne hišice, paviljoni, nadstreški in drugi objekti. Vse po naročilu, izdelava in montaža.",
       cta_call:"Pokličite", cta_see:"Oglejte si objekte", obj_title:"Naši objekti", obj_intro:"Izberite vrsto objekta.",
@@ -288,7 +346,7 @@
       m_alpine:"Alpske hišice", m_assembly:"Montaža objektov", m_fire:"Ogrevanje s kamini", m_hospitality:"Gostinski objekti",
       con_title:"Kontakt", con_intro:"Pokličite ali nam pišite.", con_phone:"Telefon", con_mail:"E-pošta", con_place:"Sedež", con_place_val:"Celje, Slovenija",
       copy:"Kopiraj", copied:"Kopirano", draft:"Osnutek domače strani" },
-    hr: { nav_objects:"Objekti", nav_info:"Važne informacije", nav_contact:"Kontakt", nav_menu:"Izbornik", nav_menu_label:"Navigacija",
+    hr: { nav_lang:"Jezik", nav_objects:"Objekti", nav_info:"Važne informacije", nav_contact:"Kontakt", nav_menu:"Izbornik", nav_menu_label:"Navigacija",
       hero_title:"Brunarice", hero_lead:"Društvo za proizvodnju i prodaju drvenih objekata",
       hero_sub:"Drvene kuće, vrtne kućice, sjenice, nadstrešnice i drugi objekti. Sve po narudžbi, izrada i montaža.",
       cta_call:"Nazovite", cta_see:"Pogledajte objekte", obj_title:"Naši objekti", obj_intro:"Odaberite vrstu objekta.",
@@ -296,7 +354,7 @@
       m_alpine:"Alpske kućice", m_assembly:"Montaža objekata", m_fire:"Grijanje kaminima", m_hospitality:"Ugostiteljski objekti",
       con_title:"Kontakt", con_intro:"Nazovite ili nam pišite.", con_phone:"Telefon", con_mail:"E-pošta", con_place:"Sjedište", con_place_val:"Celje, Slovenija",
       copy:"Kopiraj", copied:"Kopirano", draft:"Nacrt početne stranice" },
-    sr: { nav_objects:"Objekti", nav_info:"Važne informacije", nav_contact:"Kontakt", nav_menu:"Meni", nav_menu_label:"Navigacija",
+    sr: { nav_lang:"Jezik", nav_objects:"Objekti", nav_info:"Važne informacije", nav_contact:"Kontakt", nav_menu:"Meni", nav_menu_label:"Navigacija",
       hero_title:"Brvnare", hero_lead:"Društvo za proizvodnju i prodaju drvenih objekata",
       hero_sub:"Drvene kuće, baštenske kućice, sjenice, nadstrešnice i drugi objekti. Sve po narudžbini, izrada i montaža.",
       cta_call:"Pozovite", cta_see:"Pogledajte objekte", obj_title:"Naši objekti", obj_intro:"Izaberite vrstu objekta.",
@@ -304,7 +362,7 @@
       m_alpine:"Alpske kućice", m_assembly:"Montaža objekata", m_fire:"Grejanje kaminima", m_hospitality:"Ugostiteljski objekti",
       con_title:"Kontakt", con_intro:"Pozovite ili nam pišite.", con_phone:"Telefon", con_mail:"E-pošta", con_place:"Sedište", con_place_val:"Celje, Slovenija",
       copy:"Kopiraj", copied:"Kopirano", draft:"Nacrt početne stranice" },
-    de: { nav_objects:"Objekte", nav_info:"Wichtige Informationen", nav_contact:"Kontakt", nav_menu:"Menü", nav_menu_label:"Navigation",
+    de: { nav_lang:"Sprache", nav_objects:"Objekte", nav_info:"Wichtige Informationen", nav_contact:"Kontakt", nav_menu:"Menü", nav_menu_label:"Navigation",
       hero_title:"Blockhäuser", hero_lead:"Unternehmen für Herstellung und Vertrieb von Holzobjekten",
       hero_sub:"Holzhäuser, Gartenhäuser, Pavillons, Überdachungen und weitere Objekte. Alles nach Maß, Herstellung und Montage.",
       cta_call:"Anrufen", cta_see:"Objekte ansehen", obj_title:"Unsere Objekte", obj_intro:"Wählen Sie die Art des Objekts.",
@@ -312,7 +370,7 @@
       m_alpine:"Alpenhäuschen", m_assembly:"Montage von Objekten", m_fire:"Heizen mit Kaminen", m_hospitality:"Gastronomieobjekte",
       con_title:"Kontakt", con_intro:"Rufen Sie an oder schreiben Sie uns.", con_phone:"Telefon", con_mail:"E-Mail", con_place:"Sitz", con_place_val:"Celje, Slowenien",
       copy:"Kopieren", copied:"Kopiert", draft:"Entwurf der Startseite" },
-    en: { nav_objects:"Structures", nav_info:"Important information", nav_contact:"Contact", nav_menu:"Menu", nav_menu_label:"Navigation",
+    en: { nav_lang:"Language", nav_objects:"Structures", nav_info:"Important information", nav_contact:"Contact", nav_menu:"Menu", nav_menu_label:"Navigation",
       hero_title:"Log cabins", hero_lead:"Company for the production and sale of timber structures",
       hero_sub:"Timber houses, garden houses, pavilions, carports and other structures. Everything made to order, with production and assembly.",
       cta_call:"Call us", cta_see:"View our structures", obj_title:"Our structures", obj_intro:"Choose a type of structure.",
@@ -320,7 +378,7 @@
       m_alpine:"Alpine cabins", m_assembly:"Assembly", m_fire:"Fireplace heating", m_hospitality:"Hospitality buildings",
       con_title:"Contact", con_intro:"Call or write to us.", con_phone:"Phone", con_mail:"Email", con_place:"Location", con_place_val:"Celje, Slovenia",
       copy:"Copy", copied:"Copied", draft:"Home page draft" },
-    it: { nav_objects:"Strutture", nav_info:"Informazioni importanti", nav_contact:"Contatti", nav_menu:"Menu", nav_menu_label:"Navigazione",
+    it: { nav_lang:"Lingua", nav_objects:"Strutture", nav_info:"Informazioni importanti", nav_contact:"Contatti", nav_menu:"Menu", nav_menu_label:"Navigazione",
       hero_title:"Baite in legno", hero_lead:"Azienda per la produzione e la vendita di strutture in legno",
       hero_sub:"Case in legno, casette da giardino, padiglioni, tettoie e altre strutture. Tutto su misura, con produzione e montaggio.",
       cta_call:"Chiama", cta_see:"Scopri le strutture", obj_title:"Le nostre strutture", obj_intro:"Scegli il tipo di struttura.",
@@ -330,7 +388,9 @@
       copy:"Copia", copied:"Copiato", draft:"Bozza della home page" }
   };
   var sel = document.getElementById('lang');
-  var mobileNav = document.getElementById('mobile-nav');
+  var menuBtn = document.getElementById('menu-btn');
+  var menuPanel = document.getElementById('menu-panel');
+  var langBtns = document.querySelectorAll('.menu-lang-list button');
   var current = 'sl';
 
   function apply(lang) {
@@ -343,6 +403,21 @@
       if (d[k] != null) el.textContent = d[k];
     });
     sel.value = lang;
+    langBtns.forEach(function (b) {
+      b.setAttribute('aria-pressed', b.getAttribute('data-lang') === lang ? 'true' : 'false');
+    });
+    menuBtn.setAttribute('aria-label', d.nav_menu);
+  }
+
+  function setMenu(open) {
+    menuPanel.classList.toggle('open', open);
+    menuBtn.classList.toggle('open', open);
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  function chooseLang(lang) {
+    apply(lang);
+    try { localStorage.setItem('alp-les-lang', lang); } catch (e) {}
   }
 
   function initial() {
@@ -353,15 +428,38 @@
     return T[nav] ? nav : 'sl';
   }
 
-  sel.addEventListener('change', function () {
-    apply(sel.value);
-    try { localStorage.setItem('alp-les-lang', sel.value); } catch (e) {}
+  sel.addEventListener('change', function () { chooseLang(sel.value); });
+
+  menuBtn.addEventListener('click', function () {
+    setMenu(!menuPanel.classList.contains('open'));
   });
 
-  mobileNav.addEventListener('change', function () {
-    if (mobileNav.value) window.location.hash = mobileNav.value;
-    mobileNav.value = '';
+  menuPanel.querySelectorAll('.menu-links a').forEach(function (a) {
+    a.addEventListener('click', function () { setMenu(false); });
   });
+
+  langBtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      chooseLang(b.getAttribute('data-lang'));
+      setMenu(false);
+    });
+  });
+
+  document.addEventListener('click', function (e) {
+    if (menuPanel.classList.contains('open') && !e.target.closest('.site-head')) setMenu(false);
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && menuPanel.classList.contains('open')) {
+      setMenu(false);
+      menuBtn.focus();
+    }
+  });
+
+  var wide = window.matchMedia('(min-width: 861px)');
+  var onWide = function (e) { if (e.matches) setMenu(false); };
+  if (wide.addEventListener) wide.addEventListener('change', onWide);
+  else if (wide.addListener) wide.addListener(onWide);
 
   document.querySelectorAll('.copy').forEach(function (btn) {
     btn.addEventListener('click', function () {
