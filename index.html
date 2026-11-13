@@ -20,10 +20,11 @@
     --link: #8A4B12;
     --font-display: "Bree Serif", Georgia, "Times New Roman", serif;
     --font-body: "Source Sans 3", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --head-h: 73px; /* višina headerja (72px + 1px rob); na telefonu se prepiše spodaj */
   }
 
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; scroll-padding-top: calc(72px + env(safe-area-inset-top, 0px)); }
+  html { scroll-behavior: smooth; scroll-padding-top: calc(var(--head-h) + env(safe-area-inset-top, 0px)); }
   body {
     background: var(--bg); color: var(--fg);
     font-family: var(--font-body); font-size: 17px; line-height: 1.55;
@@ -116,8 +117,15 @@
   .menu-lang-list button[aria-pressed="true"] { background: var(--fg); color: var(--amber); border-color: var(--fg); }
 
   /* hero */
-  .hero { position: relative; isolation: isolate; color: #fff; background: #8A6A3A; }
-  .hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 32% 55%; z-index: -2; }
+  /* hero zapolni ves preostali ekran pod headerjem, da vsebina spodaj ni vidna ob prvem odprtju */
+  .hero {
+    position: relative; isolation: isolate; color: #fff; background: #8A6A3A;
+    display: flex; align-items: center;
+    min-height: calc(100vh - var(--head-h) - env(safe-area-inset-top, 0px));
+    min-height: calc(100svh - var(--head-h) - env(safe-area-inset-top, 0px));
+  }
+  /* y = 0%: poravnano na zgornji rob, da se vrh strehe nikoli ne odreže (če je treba, se odreže spodnja trava) */
+  .hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 32% 0%; z-index: -2; }
   .hero::after {
     content: ""; position: absolute; inset: 0; z-index: -1;
     background: linear-gradient(90deg, rgba(34,20,6,.66) 0%, rgba(34,20,6,.42) 48%, rgba(34,20,6,0) 82%);
@@ -202,6 +210,7 @@
     .head-nav, .lang { display: none; }
     .menu-btn { display: block; }
     .menu-panel { display: block; }
+    :root { --head-h: 65px; }
     .site-head .wrap { min-height: 64px; }
     .cards { grid-template-columns: 1fr; }
   }
@@ -210,8 +219,10 @@
     .tiles { grid-template-columns: 1fr; }
     .tile, .tile.big { grid-column: auto; }
     .brand img { width: 40px; height: 48px; }
-    .hero::after { background: linear-gradient(180deg, rgba(34,20,6,.4) 0%, rgba(34,20,6,.72) 100%); }
-    .hero-img { object-position: 28% 50%; }
+    .hero { align-items: flex-end; }
+    .hero .wrap { padding-block: 32px 28px; }
+    .hero::after { background: linear-gradient(180deg, rgba(34,20,6,.05) 0%, rgba(34,20,6,.25) 35%, rgba(34,20,6,.85) 100%); }
+    .hero-img { object-position: 62% 0%; }
     .btn { flex: 1 1 100%; }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -229,6 +240,7 @@
     <nav class="head-nav" aria-label="Main">
       <a href="#objekti" data-i18n="nav_objects">Objekti</a>
       <a href="#pomembne-informacije" data-i18n="nav_info">Pomembne informacije</a>
+      <a href="#galerija" data-i18n="nav_gallery">Galerija</a>
       <a href="#kontakt" data-i18n="nav_contact">Kontakt</a>
     </nav>
     <label for="lang" style="position:absolute;left:-9999px">Language</label>
@@ -247,6 +259,7 @@
       <nav class="menu-links" aria-label="Navigacija">
         <a href="#objekti" data-i18n="nav_objects">Objekti</a>
         <a href="#pomembne-informacije" data-i18n="nav_info">Pomembne informacije</a>
+        <a href="#galerija" data-i18n="nav_gallery">Galerija</a>
         <a href="#kontakt" data-i18n="nav_contact">Kontakt</a>
       </nav>
       <div>
@@ -338,7 +351,7 @@
 <script>
 (function () {
   var T = {
-    sl: { nav_lang:"Jezik", nav_objects:"Objekti", nav_info:"Pomembne informacije", nav_contact:"Kontakt", nav_menu:"Meni", nav_menu_label:"Navigacija",
+    sl: { nav_lang:"Jezik", nav_objects:"Objekti", nav_info:"Pomembne informacije", nav_gallery:"Galerija", nav_contact:"Kontakt", nav_menu:"Meni", nav_menu_label:"Navigacija",
       hero_title:"Brunarice", hero_lead:"Družba za proizvodnjo in trženje lesenih objektov",
       hero_sub:"Lesene hiše, vrtne hišice, paviljoni, nadstreški in drugi objekti. Vse po naročilu, izdelava in montaža.",
       cta_call:"Pokličite", cta_see:"Oglejte si objekte", obj_title:"Naši objekti", obj_intro:"Izberite vrsto objekta.",
@@ -346,7 +359,7 @@
       m_alpine:"Alpske hišice", m_assembly:"Montaža objektov", m_fire:"Ogrevanje s kamini", m_hospitality:"Gostinski objekti",
       con_title:"Kontakt", con_intro:"Pokličite ali nam pišite.", con_phone:"Telefon", con_mail:"E-pošta", con_place:"Sedež", con_place_val:"Celje, Slovenija",
       copy:"Kopiraj", copied:"Kopirano", draft:"Osnutek domače strani" },
-    hr: { nav_lang:"Jezik", nav_objects:"Objekti", nav_info:"Važne informacije", nav_contact:"Kontakt", nav_menu:"Izbornik", nav_menu_label:"Navigacija",
+    hr: { nav_lang:"Jezik", nav_objects:"Objekti", nav_info:"Važne informacije", nav_gallery:"Galerija", nav_contact:"Kontakt", nav_menu:"Izbornik", nav_menu_label:"Navigacija",
       hero_title:"Brunarice", hero_lead:"Društvo za proizvodnju i prodaju drvenih objekata",
       hero_sub:"Drvene kuće, vrtne kućice, sjenice, nadstrešnice i drugi objekti. Sve po narudžbi, izrada i montaža.",
       cta_call:"Nazovite", cta_see:"Pogledajte objekte", obj_title:"Naši objekti", obj_intro:"Odaberite vrstu objekta.",
@@ -354,7 +367,7 @@
       m_alpine:"Alpske kućice", m_assembly:"Montaža objekata", m_fire:"Grijanje kaminima", m_hospitality:"Ugostiteljski objekti",
       con_title:"Kontakt", con_intro:"Nazovite ili nam pišite.", con_phone:"Telefon", con_mail:"E-pošta", con_place:"Sjedište", con_place_val:"Celje, Slovenija",
       copy:"Kopiraj", copied:"Kopirano", draft:"Nacrt početne stranice" },
-    sr: { nav_lang:"Jezik", nav_objects:"Objekti", nav_info:"Važne informacije", nav_contact:"Kontakt", nav_menu:"Meni", nav_menu_label:"Navigacija",
+    sr: { nav_lang:"Jezik", nav_objects:"Objekti", nav_info:"Važne informacije", nav_gallery:"Galerija", nav_contact:"Kontakt", nav_menu:"Meni", nav_menu_label:"Navigacija",
       hero_title:"Brvnare", hero_lead:"Društvo za proizvodnju i prodaju drvenih objekata",
       hero_sub:"Drvene kuće, baštenske kućice, sjenice, nadstrešnice i drugi objekti. Sve po narudžbini, izrada i montaža.",
       cta_call:"Pozovite", cta_see:"Pogledajte objekte", obj_title:"Naši objekti", obj_intro:"Izaberite vrstu objekta.",
@@ -362,7 +375,7 @@
       m_alpine:"Alpske kućice", m_assembly:"Montaža objekata", m_fire:"Grejanje kaminima", m_hospitality:"Ugostiteljski objekti",
       con_title:"Kontakt", con_intro:"Pozovite ili nam pišite.", con_phone:"Telefon", con_mail:"E-pošta", con_place:"Sedište", con_place_val:"Celje, Slovenija",
       copy:"Kopiraj", copied:"Kopirano", draft:"Nacrt početne stranice" },
-    de: { nav_lang:"Sprache", nav_objects:"Objekte", nav_info:"Wichtige Informationen", nav_contact:"Kontakt", nav_menu:"Menü", nav_menu_label:"Navigation",
+    de: { nav_lang:"Sprache", nav_objects:"Objekte", nav_info:"Wichtige Informationen", nav_gallery:"Galerie", nav_contact:"Kontakt", nav_menu:"Menü", nav_menu_label:"Navigation",
       hero_title:"Blockhäuser", hero_lead:"Unternehmen für Herstellung und Vertrieb von Holzobjekten",
       hero_sub:"Holzhäuser, Gartenhäuser, Pavillons, Überdachungen und weitere Objekte. Alles nach Maß, Herstellung und Montage.",
       cta_call:"Anrufen", cta_see:"Objekte ansehen", obj_title:"Unsere Objekte", obj_intro:"Wählen Sie die Art des Objekts.",
@@ -370,7 +383,7 @@
       m_alpine:"Alpenhäuschen", m_assembly:"Montage von Objekten", m_fire:"Heizen mit Kaminen", m_hospitality:"Gastronomieobjekte",
       con_title:"Kontakt", con_intro:"Rufen Sie an oder schreiben Sie uns.", con_phone:"Telefon", con_mail:"E-Mail", con_place:"Sitz", con_place_val:"Celje, Slowenien",
       copy:"Kopieren", copied:"Kopiert", draft:"Entwurf der Startseite" },
-    en: { nav_lang:"Language", nav_objects:"Structures", nav_info:"Important information", nav_contact:"Contact", nav_menu:"Menu", nav_menu_label:"Navigation",
+    en: { nav_lang:"Language", nav_objects:"Structures", nav_info:"Important information", nav_gallery:"Gallery", nav_contact:"Contact", nav_menu:"Menu", nav_menu_label:"Navigation",
       hero_title:"Log cabins", hero_lead:"Company for the production and sale of timber structures",
       hero_sub:"Timber houses, garden houses, pavilions, carports and other structures. Everything made to order, with production and assembly.",
       cta_call:"Call us", cta_see:"View our structures", obj_title:"Our structures", obj_intro:"Choose a type of structure.",
@@ -378,7 +391,7 @@
       m_alpine:"Alpine cabins", m_assembly:"Assembly", m_fire:"Fireplace heating", m_hospitality:"Hospitality buildings",
       con_title:"Contact", con_intro:"Call or write to us.", con_phone:"Phone", con_mail:"Email", con_place:"Location", con_place_val:"Celje, Slovenia",
       copy:"Copy", copied:"Copied", draft:"Home page draft" },
-    it: { nav_lang:"Lingua", nav_objects:"Strutture", nav_info:"Informazioni importanti", nav_contact:"Contatti", nav_menu:"Menu", nav_menu_label:"Navigazione",
+    it: { nav_lang:"Lingua", nav_objects:"Strutture", nav_info:"Informazioni importanti", nav_gallery:"Galleria", nav_contact:"Contatti", nav_menu:"Menu", nav_menu_label:"Navigazione",
       hero_title:"Baite in legno", hero_lead:"Azienda per la produzione e la vendita di strutture in legno",
       hero_sub:"Case in legno, casette da giardino, padiglioni, tettoie e altre strutture. Tutto su misura, con produzione e montaggio.",
       cta_call:"Chiama", cta_see:"Scopri le strutture", obj_title:"Le nostre strutture", obj_intro:"Scegli il tipo di struttura.",
