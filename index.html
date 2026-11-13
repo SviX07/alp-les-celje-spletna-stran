@@ -231,18 +231,18 @@
     .tile, .tile.big { grid-column: auto; }
     .brand img { width: 40px; height: 48px; }
     /* telefon: besedilo zgoraj, gumba spodaj, vmes je vidna hiša */
-    .hero { align-items: stretch; --hero-top-dark: .; /* TEMNOST NEBA ZGORAJ: 0 = povsem svetlo, 1 = črno. Poskusi .3 do .6 */ }
+    .hero { align-items: stretch; }
     .hero .wrap { padding-block: 28px; display: flex; }
     .hero-copy { display: flex; flex-direction: column; flex: 1; }
     .hero .sub { display: none; }
     .hero-cta { margin-top: auto; padding-top: 16px; }
-    .hero::after { background: linear-gradient(180deg,
-      rgba(34,20,6,var(--hero-top-dark)) 0%,
-      rgba(34,20,6,calc(var(--hero-top-dark) * .52)) 28%,
-      rgba(34,20,6,.04) 48%, rgba(34,20,6,.08) 66%, rgba(34,20,6,.85) 100%); }
+    /* na telefonu je slika brez zatemnitve (zavestna odločitev: nebo in trava ostaneta naravna).
+       Berljivost besedila zagotavlja senca spodaj. Če bi želel zatemnitev nazaj, tu nastavi npr.
+       background: linear-gradient(180deg, rgba(34,20,6,.15) 0%, rgba(34,20,6,.85) 100%); */
+    .hero::after { background: none; }
     .hero-img { object-position: 62% 0%; }
-    .hero h1 { text-shadow: 0 2px 0 rgba(0,0,0,.4), 0 2px 16px rgba(0,0,0,.55); }
-    .hero .lead, .owner { text-shadow: 0 1px 10px rgba(0,0,0,.7); }
+    .hero h1 { text-shadow: 0 2px 2px rgba(0,0,0,.45), 0 2px 18px rgba(0,0,0,.75); }
+    .hero .lead, .owner { text-shadow: 0 1px 3px rgba(0,0,0,.55), 0 1px 14px rgba(0,0,0,.8); }
     .btn { flex: 1 1 100%; }
     .cards { grid-template-columns: 1fr; }
     .country { padding: 18px 18px 8px; }
