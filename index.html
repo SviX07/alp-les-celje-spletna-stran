@@ -219,10 +219,19 @@
     .tiles { grid-template-columns: 1fr; }
     .tile, .tile.big { grid-column: auto; }
     .brand img { width: 40px; height: 48px; }
-    .hero { align-items: flex-end; }
-    .hero .wrap { padding-block: 32px 28px; }
-    .hero::after { background: linear-gradient(180deg, rgba(34,20,6,.05) 0%, rgba(34,20,6,.25) 35%, rgba(34,20,6,.85) 100%); }
+    /* telefon: besedilo zgoraj, gumba spodaj, vmes je vidna hiša */
+    .hero { align-items: stretch; --hero-top-dark: .42; /* TEMNOST NEBA ZGORAJ: 0 = povsem svetlo, 1 = črno. Poskusi .3 do .6 */ }
+    .hero .wrap { padding-block: 28px; display: flex; }
+    .hero-copy { display: flex; flex-direction: column; flex: 1; }
+    .hero .sub { display: none; }
+    .hero-cta { margin-top: auto; padding-top: 16px; }
+    .hero::after { background: linear-gradient(180deg,
+      rgba(34,20,6,var(--hero-top-dark)) 0%,
+      rgba(34,20,6,calc(var(--hero-top-dark) * .52)) 28%,
+      rgba(34,20,6,.04) 48%, rgba(34,20,6,.08) 66%, rgba(34,20,6,.85) 100%); }
     .hero-img { object-position: 62% 0%; }
+    .hero h1 { text-shadow: 0 2px 0 rgba(0,0,0,.4), 0 2px 16px rgba(0,0,0,.55); }
+    .hero .lead, .owner { text-shadow: 0 1px 10px rgba(0,0,0,.7); }
     .btn { flex: 1 1 100%; }
   }
   @media (prefers-reduced-motion: reduce) {
