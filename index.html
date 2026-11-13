@@ -192,10 +192,22 @@
   .contact::after { content: ""; position: absolute; inset: 0; z-index: -1; background: rgba(255,246,219,.84); }
   .contact h2 { font-size: clamp(2rem, 6vw, 3.1rem); color: var(--fg); }
   .contact .intro { margin-top: 8px; font-size: 1.1rem; }
-  .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 28px; }
+  .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 28px; align-items: start; }
   .card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 18px; display: grid; gap: 6px; min-width: 0; }
   .card .lbl { font-size: .78rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--link); }
   .card .val { font-family: var(--font-display); font-size: 1.45rem; overflow-wrap: anywhere; user-select: all; }
+  /* kontakt po državah */
+  .country { align-content: start; gap: 0; padding: 22px 22px 12px; box-shadow: 0 6px 18px rgba(43,29,14,.08); }
+  .country h3 { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.5rem, 4.4vw, 1.8rem); line-height: 1.15; color: var(--fg); padding-bottom: 12px; border-bottom: 3px solid var(--amber); }
+  .country .person { margin-top: 12px; font-weight: 700; color: var(--brown); }
+  .country dl { margin: 6px 0 0; }
+  .country .row { display: grid; grid-template-columns: minmax(7.2rem, 34%) 1fr; gap: 2px 14px; align-items: baseline; padding: 11px 0; border-top: 1px solid var(--line); }
+  .country .row:first-child { border-top: 0; }
+  .country dt { font-size: .74rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--link); }
+  .country dd { margin: 0; font-size: 1.08rem; overflow-wrap: anywhere; }
+  .country dd a { color: var(--link); font-weight: 700; text-decoration: none; }
+  .country dd a:hover { text-decoration: underline; }
+  .country dd .who { color: var(--brown); font-weight: 600; margin-left: 6px; }
   .copy {
     justify-self: start; margin-top: 6px; min-height: 36px; padding: 0 14px; border-radius: 6px;
     background: transparent; color: var(--fg); border: 1px solid rgba(43,29,14,.4); font: 600 .88rem var(--font-body); cursor: pointer;
@@ -212,7 +224,6 @@
     .menu-panel { display: block; }
     :root { --head-h: 65px; }
     .site-head .wrap { min-height: 64px; }
-    .cards { grid-template-columns: 1fr; }
   }
   @media (max-width: 640px) {
     body { font-size: 16px; }
@@ -233,6 +244,9 @@
     .hero h1 { text-shadow: 0 2px 0 rgba(0,0,0,.4), 0 2px 16px rgba(0,0,0,.55); }
     .hero .lead, .owner { text-shadow: 0 1px 10px rgba(0,0,0,.7); }
     .btn { flex: 1 1 100%; }
+    .cards { grid-template-columns: 1fr; }
+    .country { padding: 18px 18px 8px; }
+    .country .row { grid-template-columns: 1fr; padding: 10px 0; }
   }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
@@ -331,20 +345,44 @@
       <h2 data-i18n="con_title">Kontakt</h2>
       <p class="intro" data-i18n="con_intro">Pokličite ali nam pišite.</p>
       <div class="cards">
-        <div class="card">
-          <span class="lbl" data-i18n="con_phone">Telefon</span>
-          <span class="val" id="v-phone">041 622 700</span>
-          <button class="copy" type="button" data-copy="v-phone" data-i18n="copy">Kopiraj</button>
-        </div>
-        <div class="card">
-          <span class="lbl" data-i18n="con_mail">E-pošta</span>
-          <span class="val" id="v-mail">info@alp-les.com</span>
-          <button class="copy" type="button" data-copy="v-mail" data-i18n="copy">Kopiraj</button>
-        </div>
-        <div class="card">
-          <span class="lbl" data-i18n="con_place">Sedež</span>
-          <span class="val" data-i18n="con_place_val">Celje, Slovenija</span>
-        </div>
+        <article class="card country">
+          <h3 data-i18n="c_si">Slovenija</h3>
+          <p class="person">Andrej Lesjak</p>
+          <dl>
+            <div class="row"><dt data-i18n="l_addr">Naslov</dt><dd>Runtole 1, 3000 Celje</dd></div>
+            <div class="row"><dt data-i18n="l_mobile">Mobilni telefon</dt><dd><a href="tel:+38641622700">041 622 700</a></dd></div>
+            <div class="row"><dt data-i18n="con_mail">E-pošta</dt><dd><a href="mailto:info@alp-les.com">info@alp-les.com</a></dd></div>
+            <div class="row"><dt data-i18n="l_web">Spletna stran</dt><dd><a href="http://www.alp-les.com" target="_blank" rel="noopener">www.alp-les.com</a></dd></div>
+            <div class="row"><dt data-i18n="l_vat">ID za DDV</dt><dd>SI41062132</dd></div>
+            <div class="row"><dt data-i18n="l_reg">Matična št.</dt><dd>2223724</dd></div>
+          </dl>
+        </article>
+        <article class="card country">
+          <h3 data-i18n="c_hr">Hrvaška</h3>
+          <dl>
+            <div class="row"><dt data-i18n="l_mobile_hr">Mobitel</dt><dd><a href="tel:+38598666969">098 666-969</a></dd></div>
+            <div class="row"><dt data-i18n="l_mobile_si">Mobitel SLO</dt><dd><a href="tel:+38641622700">00386 41 622 700</a><span class="who">Andrej</span></dd></div>
+            <div class="row"><dt data-i18n="con_mail">E-pošta</dt><dd><a href="mailto:info@alp-les.com">info@alp-les.com</a></dd></div>
+            <div class="row"><dt data-i18n="l_web">Spletna stran</dt><dd><a href="http://www.alp-les.com" target="_blank" rel="noopener">www.alp-les.com</a></dd></div>
+          </dl>
+        </article>
+        <article class="card country">
+          <h3 data-i18n="c_rs">Srbija</h3>
+          <p class="person">Zoran Erić</p>
+          <dl>
+            <div class="row"><dt data-i18n="l_addr">Naslov</dt><dd>Pilatovići 5, 31210 POŽEGA</dd></div>
+            <div class="row"><dt data-i18n="con_phone">Telefon</dt><dd><a href="tel:+38162601500">00381 62 601 500</a></dd></div>
+            <div class="row"><dt data-i18n="con_mail">E-pošta</dt><dd><a href="mailto:info@alp-les.com">info@alp-les.com</a></dd></div>
+          </dl>
+        </article>
+        <article class="card country">
+          <h3 data-i18n="c_at">Avstrija</h3>
+          <dl>
+            <div class="row"><dt data-i18n="l_addr">Naslov</dt><dd>Lastenstrasse 9, 8020 Graz</dd></div>
+            <div class="row"><dt data-i18n="con_mail">E-pošta</dt><dd><a href="mailto:info@alp-les.com">info@alp-les.com</a></dd></div>
+            <div class="row"><dt data-i18n="l_web">Spletna stran</dt><dd><a href="http://www.alp-les.com" target="_blank" rel="noopener">www.alp-les.com</a></dd></div>
+          </dl>
+        </article>
       </div>
     </div>
   </section>
@@ -367,6 +405,7 @@
       t_garden:"Vrtne hiše", t_weekend:"Vikendi", t_pavilion:"Paviljoni", t_carport:"Nadstreški", t_home:"Stanovanjski objekti", t_view:"Ogled",
       m_alpine:"Alpske hišice", m_assembly:"Montaža objektov", m_fire:"Ogrevanje s kamini", m_hospitality:"Gostinski objekti",
       con_title:"Kontakt", con_intro:"Pokličite ali nam pišite.", con_phone:"Telefon", con_mail:"E-pošta", con_place:"Sedež", con_place_val:"Celje, Slovenija",
+      c_si:"Slovenija", c_hr:"Hrvaška", c_rs:"Srbija", c_at:"Avstrija", l_addr:"Naslov", l_mobile:"Mobilni telefon", l_mobile_hr:"Mobilni telefon", l_mobile_si:"Mobilni telefon SLO", l_web:"Spletna stran", l_vat:"ID za DDV", l_reg:"Matična št.",
       copy:"Kopiraj", copied:"Kopirano", draft:"Osnutek domače strani" },
     hr: { nav_lang:"Jezik", nav_objects:"Objekti", nav_info:"Važne informacije", nav_gallery:"Galerija", nav_contact:"Kontakt", nav_menu:"Izbornik", nav_menu_label:"Navigacija",
       hero_title:"Brunarice", hero_lead:"Društvo za proizvodnju i prodaju drvenih objekata",
@@ -375,6 +414,7 @@
       t_garden:"Vrtne kućice", t_weekend:"Vikendice", t_pavilion:"Sjenice", t_carport:"Nadstrešnice", t_home:"Stambeni objekti", t_view:"Pogledaj",
       m_alpine:"Alpske kućice", m_assembly:"Montaža objekata", m_fire:"Grijanje kaminima", m_hospitality:"Ugostiteljski objekti",
       con_title:"Kontakt", con_intro:"Nazovite ili nam pišite.", con_phone:"Telefon", con_mail:"E-pošta", con_place:"Sjedište", con_place_val:"Celje, Slovenija",
+      c_si:"Slovenija", c_hr:"Hrvatska", c_rs:"Srbija", c_at:"Austrija", l_addr:"Adresa", l_mobile:"Mobitel", l_mobile_hr:"Mobitel", l_mobile_si:"Mobitel SLO", l_web:"Web stranica", l_vat:"ID za PDV", l_reg:"Matični broj",
       copy:"Kopiraj", copied:"Kopirano", draft:"Nacrt početne stranice" },
     sr: { nav_lang:"Jezik", nav_objects:"Objekti", nav_info:"Važne informacije", nav_gallery:"Galerija", nav_contact:"Kontakt", nav_menu:"Meni", nav_menu_label:"Navigacija",
       hero_title:"Brvnare", hero_lead:"Društvo za proizvodnju i prodaju drvenih objekata",
@@ -383,6 +423,7 @@
       t_garden:"Baštenske kućice", t_weekend:"Vikendice", t_pavilion:"Sjenice", t_carport:"Nadstrešnice", t_home:"Stambeni objekti", t_view:"Pogledaj",
       m_alpine:"Alpske kućice", m_assembly:"Montaža objekata", m_fire:"Grejanje kaminima", m_hospitality:"Ugostiteljski objekti",
       con_title:"Kontakt", con_intro:"Pozovite ili nam pišite.", con_phone:"Telefon", con_mail:"E-pošta", con_place:"Sedište", con_place_val:"Celje, Slovenija",
+      c_si:"Slovenija", c_hr:"Hrvatska", c_rs:"Srbija", c_at:"Austrija", l_addr:"Adresa", l_mobile:"Mobilni telefon", l_mobile_hr:"Mobilni telefon", l_mobile_si:"Mobilni telefon SLO", l_web:"Veb sajt", l_vat:"ID za PDV", l_reg:"Matični broj",
       copy:"Kopiraj", copied:"Kopirano", draft:"Nacrt početne stranice" },
     de: { nav_lang:"Sprache", nav_objects:"Objekte", nav_info:"Wichtige Informationen", nav_gallery:"Galerie", nav_contact:"Kontakt", nav_menu:"Menü", nav_menu_label:"Navigation",
       hero_title:"Blockhäuser", hero_lead:"Unternehmen für Herstellung und Vertrieb von Holzobjekten",
@@ -391,6 +432,7 @@
       t_garden:"Gartenhäuser", t_weekend:"Wochenendhäuser", t_pavilion:"Pavillons", t_carport:"Überdachungen", t_home:"Wohngebäude", t_view:"Ansehen",
       m_alpine:"Alpenhäuschen", m_assembly:"Montage von Objekten", m_fire:"Heizen mit Kaminen", m_hospitality:"Gastronomieobjekte",
       con_title:"Kontakt", con_intro:"Rufen Sie an oder schreiben Sie uns.", con_phone:"Telefon", con_mail:"E-Mail", con_place:"Sitz", con_place_val:"Celje, Slowenien",
+      c_si:"Slowenien", c_hr:"Kroatien", c_rs:"Serbien", c_at:"Österreich", l_addr:"Adresse", l_mobile:"Mobiltelefon", l_mobile_hr:"Mobiltelefon", l_mobile_si:"Mobiltelefon SLO", l_web:"Webseite", l_vat:"USt-IdNr.", l_reg:"Registernummer",
       copy:"Kopieren", copied:"Kopiert", draft:"Entwurf der Startseite" },
     en: { nav_lang:"Language", nav_objects:"Structures", nav_info:"Important information", nav_gallery:"Gallery", nav_contact:"Contact", nav_menu:"Menu", nav_menu_label:"Navigation",
       hero_title:"Log cabins", hero_lead:"Company for the production and sale of timber structures",
@@ -399,6 +441,7 @@
       t_garden:"Garden houses", t_weekend:"Weekend cabins", t_pavilion:"Pavilions", t_carport:"Carports", t_home:"Residential buildings", t_view:"View",
       m_alpine:"Alpine cabins", m_assembly:"Assembly", m_fire:"Fireplace heating", m_hospitality:"Hospitality buildings",
       con_title:"Contact", con_intro:"Call or write to us.", con_phone:"Phone", con_mail:"Email", con_place:"Location", con_place_val:"Celje, Slovenia",
+      c_si:"Slovenia", c_hr:"Croatia", c_rs:"Serbia", c_at:"Austria", l_addr:"Address", l_mobile:"Mobile", l_mobile_hr:"Mobile", l_mobile_si:"Mobile SLO", l_web:"Website", l_vat:"VAT ID", l_reg:"Company reg. no.",
       copy:"Copy", copied:"Copied", draft:"Home page draft" },
     it: { nav_lang:"Lingua", nav_objects:"Strutture", nav_info:"Informazioni importanti", nav_gallery:"Galleria", nav_contact:"Contatti", nav_menu:"Menu", nav_menu_label:"Navigazione",
       hero_title:"Baite in legno", hero_lead:"Azienda per la produzione e la vendita di strutture in legno",
@@ -407,6 +450,7 @@
       t_garden:"Casette da giardino", t_weekend:"Casette per il fine settimana", t_pavilion:"Padiglioni", t_carport:"Tettoie", t_home:"Edifici residenziali", t_view:"Vedi",
       m_alpine:"Casette alpine", m_assembly:"Montaggio", m_fire:"Riscaldamento con camini", m_hospitality:"Strutture per la ristorazione",
       con_title:"Contatti", con_intro:"Chiamaci o scrivici.", con_phone:"Telefono", con_mail:"E-mail", con_place:"Sede", con_place_val:"Celje, Slovenia",
+      c_si:"Slovenia", c_hr:"Croazia", c_rs:"Serbia", c_at:"Austria", l_addr:"Indirizzo", l_mobile:"Cellulare", l_mobile_hr:"Cellulare", l_mobile_si:"Cellulare SLO", l_web:"Sito web", l_vat:"Partita IVA", l_reg:"N. di registro",
       copy:"Copia", copied:"Copiato", draft:"Bozza della home page" }
   };
   var sel = document.getElementById('lang');
