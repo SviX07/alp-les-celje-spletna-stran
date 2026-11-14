@@ -134,12 +134,14 @@
   /* seznam hiš */
   .houses { list-style: none; margin: 0; padding: 0; display: grid; gap: 22px; counter-reset: house; }
   .house { counter-increment: house; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 6px 18px rgba(43, 29, 14, .08); overflow: hidden; }
-  .house summary { list-style: none; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .house summary { list-style: none; display: grid; grid-template-columns: 210px 210px minmax(0, 1fr); align-items: center; cursor: pointer; -webkit-tap-highlight-color: transparent; }
   .house summary::-webkit-details-marker { display: none; }
   .house summary:focus-visible { outline-offset: -3px; }
-  .h-photo { position: relative; aspect-ratio: 4 / 3; background: var(--amber); overflow: hidden; }
-  .h-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
-  .house summary:hover .h-photo img { transform: scale(1.03); }
+  .h-photo, .h-plan { position: relative; aspect-ratio: 4 / 3; background: var(--amber); overflow: hidden; }
+  .h-plan { background: #fff; border-left: 1px solid var(--line); }
+  .h-plan img { object-fit: contain !important; padding: 4px; }
+  .h-photo img, .h-plan img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+  .house summary:hover .h-photo img, .house summary:hover .h-plan img { transform: scale(1.03); }
   .h-num {
     position: absolute; left: 14px; top: 14px; min-width: 46px; height: 46px; padding: 0 12px;
     display: grid; place-items: center; border-radius: 999px;
@@ -147,13 +149,13 @@
     font-family: var(--font-display); font-size: 1.5rem; line-height: 1;
   }
   .h-num::before { content: counter(house); }
-  .h-info { display: grid; gap: 16px; align-content: center; padding: 24px 28px; min-width: 0; }
-  .h-name { font-size: clamp(1.6rem, 4vw, 2.1rem); }
+  .h-info { display: grid; gap: 12px; align-content: center; padding: 16px 24px; min-width: 0; }
+  .h-name { font-size: clamp(1.4rem, 3.4vw, 1.8rem); }
   .house summary:hover .h-name { color: var(--link); }
   .chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
-  .chips li { display: grid; gap: 2px; padding: 8px 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); min-width: 0; }
+  .chips li { display: grid; gap: 2px; padding: 6px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); min-width: 0; }
   .chips .k { font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--link); }
-  .chips .v { font-weight: 700; font-size: 1.1rem; }
+  .chips .v { font-weight: 700; font-size: 1rem; }
   .h-more { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; color: var(--link); }
   .h-more .t-open { display: none; }
   .house details[open] .h-more .t-open { display: inline; }
@@ -206,8 +208,8 @@
     .site-head .wrap { min-height: 64px; }
   }
   @media (max-width: 760px) {
-    .house summary { grid-template-columns: 1fr; }
-    .h-info { padding: 18px 18px 20px; }
+    .house summary { grid-template-columns: 1fr 1fr; }
+    .h-info { grid-column: 1 / -1; padding: 14px 18px 16px; }
     .h-body { padding: 4px 18px 22px; }
     .specs { grid-template-columns: 1fr; }
     .specs .row:nth-child(2) { border-top: 1px solid var(--line); }
@@ -319,14 +321,16 @@
 
   var HOUSES = [
     {
-      dim: '3 × 4 m', area: '12 m²', wall: '28 mm',
+      dim: '3 × 2,5 m', area: '7,5 m²', wall: '28 mm',
+      plan: 'slike/vrtne-hise/1/vrtna-hisa1nacrt.jpg',
       wood: 'v_wood', roof: 'v_roof', mount: 'v_mount',
       desc: {
         sl: 'Vzorčni opis hiše. Tu bo kratek opis: za kaj je hiša primerna, kakšne so možnosti prilagoditve (okna, vrata, barva, dodatni shrambni prostor) in kaj je vključeno v ceno. Vsak objekt izdelamo po naročilu.'
       },
       images: [
         'slike/vrtne-hise/1/01.jpg', 'slike/vrtne-hise/1/02.jpg', 'slike/vrtne-hise/1/03.jpg',
-        'slike/vrtne-hise/1/04.jpg', 'slike/vrtne-hise/1/05.jpg'
+        'slike/vrtne-hise/1/04.jpg', 'slike/vrtne-hise/1/05.jpg',
+        'slike/vrtne-hise/1/vrtna-hisa1nacrt.jpg'
       ]
     }
   ];
@@ -334,37 +338,37 @@
   var T = {
     sl: { nav_lang:"Jezik", nav_objects:"Objekti", nav_info:"Pomembne informacije", nav_gallery:"Galerija", nav_contact:"Kontakt", nav_menu:"Meni",
       back:"Vsi objekti", h_title:"Vrtne hiše", h_intro:"Kliknite na hišo za več podatkov in slik.", house:"Vrtna hiša",
-      s_dim:"Zunanje mere", s_area:"Površina", s_wall:"Debelina sten", s_wood:"Material", s_roof:"Streha", s_mount:"Montaža",
+      s_dim:"Zunanje mere", s_area:"Površina", s_wall:"Debelina sten", s_wood:"Material", s_roof:"Streha", s_mount:"Montaža", s_plan:"Načrt",
       v_wood:"Smrekov les", v_roof:"Dvokapna", v_mount:"Vključena", more:"Več podatkov", less:"Skrij podatke", g_title:"Slike",
       call:"Pokličite", enquire:"Pošljite povpraševanje", close:"Zapri", prev:"Prejšnja slika", next:"Naslednja slika", photo:"Slika",
       demo:"Poskusna stran: podatki in mere so vzorčni, slike so izrezi iste fotografije.", draft:"Osnutek domače strani" },
     hr: { nav_lang:"Jezik", nav_objects:"Objekti", nav_info:"Važne informacije", nav_gallery:"Galerija", nav_contact:"Kontakt", nav_menu:"Izbornik",
       back:"Svi objekti", h_title:"Vrtne kućice", h_intro:"Kliknite na kućicu za više podataka i slika.", house:"Vrtna kućica",
-      s_dim:"Vanjske mjere", s_area:"Površina", s_wall:"Debljina zidova", s_wood:"Materijal", s_roof:"Krov", s_mount:"Montaža",
+      s_dim:"Vanjske mjere", s_area:"Površina", s_wall:"Debljina zidova", s_wood:"Materijal", s_roof:"Krov", s_mount:"Montaža", s_plan:"Nacrt",
       v_wood:"Smrekovo drvo", v_roof:"Dvovodni", v_mount:"Uključena", more:"Više podataka", less:"Sakrij podatke", g_title:"Slike",
       call:"Nazovite", enquire:"Pošaljite upit", close:"Zatvori", prev:"Prethodna slika", next:"Sljedeća slika", photo:"Slika",
       draft:"Nacrt početne stranice" },
     sr: { nav_lang:"Jezik", nav_objects:"Objekti", nav_info:"Važne informacije", nav_gallery:"Galerija", nav_contact:"Kontakt", nav_menu:"Meni",
       back:"Svi objekti", h_title:"Baštenske kućice", h_intro:"Kliknite na kućicu za više podataka i slika.", house:"Baštenska kućica",
-      s_dim:"Spoljne mere", s_area:"Površina", s_wall:"Debljina zidova", s_wood:"Materijal", s_roof:"Krov", s_mount:"Montaža",
+      s_dim:"Spoljne mere", s_area:"Površina", s_wall:"Debljina zidova", s_wood:"Materijal", s_roof:"Krov", s_mount:"Montaža", s_plan:"Nacrt",
       v_wood:"Smrekovo drvo", v_roof:"Dvovodni", v_mount:"Uključena", more:"Više podataka", less:"Sakrij podatke", g_title:"Slike",
       call:"Pozovite", enquire:"Pošaljite upit", close:"Zatvori", prev:"Prethodna slika", next:"Sledeća slika", photo:"Slika",
       draft:"Nacrt početne stranice" },
     de: { nav_lang:"Sprache", nav_objects:"Objekte", nav_info:"Wichtige Informationen", nav_gallery:"Galerie", nav_contact:"Kontakt", nav_menu:"Menü",
       back:"Alle Objekte", h_title:"Gartenhäuser", h_intro:"Klicken Sie auf ein Haus für weitere Daten und Bilder.", house:"Gartenhaus",
-      s_dim:"Außenmaße", s_area:"Fläche", s_wall:"Wandstärke", s_wood:"Material", s_roof:"Dach", s_mount:"Montage",
+      s_dim:"Außenmaße", s_area:"Fläche", s_wall:"Wandstärke", s_wood:"Material", s_roof:"Dach", s_mount:"Montage", s_plan:"Grundriss",
       v_wood:"Fichtenholz", v_roof:"Satteldach", v_mount:"Inklusive", more:"Mehr Daten", less:"Daten ausblenden", g_title:"Bilder",
       call:"Anrufen", enquire:"Anfrage senden", close:"Schließen", prev:"Vorheriges Bild", next:"Nächstes Bild", photo:"Bild",
       draft:"Entwurf der Startseite" },
     en: { nav_lang:"Language", nav_objects:"Structures", nav_info:"Important information", nav_gallery:"Gallery", nav_contact:"Contact", nav_menu:"Menu",
       back:"All structures", h_title:"Garden houses", h_intro:"Click a house for more details and photos.", house:"Garden house",
-      s_dim:"External size", s_area:"Area", s_wall:"Wall thickness", s_wood:"Material", s_roof:"Roof", s_mount:"Assembly",
+      s_dim:"External size", s_area:"Area", s_wall:"Wall thickness", s_wood:"Material", s_roof:"Roof", s_mount:"Assembly", s_plan:"Floor plan",
       v_wood:"Spruce wood", v_roof:"Gable roof", v_mount:"Included", more:"More details", less:"Hide details", g_title:"Photos",
       call:"Call us", enquire:"Send an enquiry", close:"Close", prev:"Previous photo", next:"Next photo", photo:"Photo",
       draft:"Home page draft" },
     it: { nav_lang:"Lingua", nav_objects:"Strutture", nav_info:"Informazioni importanti", nav_gallery:"Galleria", nav_contact:"Contatti", nav_menu:"Menu",
       back:"Tutte le strutture", h_title:"Casette da giardino", h_intro:"Clicca su una casetta per maggiori dettagli e foto.", house:"Casetta da giardino",
-      s_dim:"Dimensioni esterne", s_area:"Superficie", s_wall:"Spessore pareti", s_wood:"Materiale", s_roof:"Tetto", s_mount:"Montaggio",
+      s_dim:"Dimensioni esterne", s_area:"Superficie", s_wall:"Spessore pareti", s_wood:"Materiale", s_roof:"Tetto", s_mount:"Montaggio", s_plan:"Pianta",
       v_wood:"Legno di abete", v_roof:"A due falde", v_mount:"Inclusa", more:"Più dettagli", less:"Nascondi dettagli", g_title:"Foto",
       call:"Chiama", enquire:"Invia una richiesta", close:"Chiudi", prev:"Foto precedente", next:"Foto successiva", photo:"Foto",
       draft:"Bozza della home page" }
@@ -440,6 +444,8 @@
     var num = el('span', 'h-num', { 'aria-hidden': 'true' });
     photo.appendChild(img);
     photo.appendChild(num);
+    var plan = el('div', 'h-plan');
+    plan.appendChild(el('img', null, { src: h.plan, alt: '', width: '876', height: '800', 'data-house-plan': n }));
 
     var info = el('div', 'h-info');
     var name = el('h2', 'h-name', { 'data-house-name': n });
@@ -459,6 +465,7 @@
     info.appendChild(more);
 
     sum.appendChild(photo);
+    sum.appendChild(plan);
     sum.appendChild(info);
     det.appendChild(sum);
 
@@ -521,6 +528,9 @@
     });
     document.querySelectorAll('[data-house-name]').forEach(function (e) {
       e.textContent = d.house + ' ' + e.getAttribute('data-house-name');
+    });
+    document.querySelectorAll('[data-house-plan]').forEach(function (e) {
+      e.alt = d.s_plan + ' – ' + d.house + ' ' + e.getAttribute('data-house-plan');
     });
     document.querySelectorAll('[data-house-alt]').forEach(function (e) {
       e.alt = d.house + ' ' + e.getAttribute('data-house-alt');
