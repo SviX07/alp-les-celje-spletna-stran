@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="sl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Vrtne hiše | Alp-les Celje</title>
+<meta name="description" content="Vrtne hiše Alp-les Celje: pregled objektov z osnovnimi podatki, merami in slikami.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bree+Serif&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+  /* Stran z vrtnimi hišami. Slogi glave in noge so enaki kot na index.html (kasneje jih je smiselno prestaviti v skupno datoteko styles.css). */
+  :root {
+    color-scheme: light;
+    --bg: #FCF3DA;
+    --surface: #FFFAEA;
+    --fg: #2B1D0E;
+    --brown: #5A3A14;
+    --muted: #6B5435;
+    --line: #E4CC92;
+    --gold: #fef659;
+    --amber: #fef659;
+    --link: #8A4B12;
+    --font-display: "Bree Serif", Georgia, "Times New Roman", serif;
+    --font-body: "Source Sans 3", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --head-h: 73px;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: calc(var(--head-h) + 12px + env(safe-area-inset-top, 0px)); }
+  html.lb-open { overflow: hidden; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font-family: var(--font-body); font-size: 17px; line-height: 1.55;
+  }
+  img { display: block; max-width: 100%; }
+  a { color: inherit; }
+  h1, h2, h3 { font-family: var(--font-display); font-weight: 400; margin: 0; text-wrap: balance; line-height: 1.1; }
+  p { margin: 0; }
+  :focus-visible { outline: 3px solid var(--link); outline-offset: 3px; }
+
+  .wrap {
+    width: 100%; max-width: 1180px; margin-inline: auto;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+
+  /* header */
+  .site-head {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 9;
+    background: var(--amber); color: var(--fg);
+    border-bottom: 1px solid rgba(43, 29, 14, .18);
+  }
+  .site-head .wrap { display: flex; align-items: center; gap: 10px; min-height: 72px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; min-width: 0; margin-right: auto; }
+  .brand img { flex: none; }
+  .brand-text { display: grid; gap: 2px; min-width: 0; line-height: 1; }
+  .brand-name { font-family: var(--font-display); font-size: clamp(1.1rem, 4.8vw, 1.8rem); letter-spacing: .02em; color: var(--fg); white-space: nowrap; }
+  .brand-owner { font-size: clamp(.78rem, 2.6vw, .95rem); font-weight: 600; color: var(--brown); white-space: nowrap; }
+  .head-nav { display: flex; gap: 30px; margin-right: 20px; }
+  .head-nav a { text-decoration: none; font-weight: 600; font-size: .98rem; }
+  .head-nav a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .lang {
+    appearance: none; -webkit-appearance: none; flex: none;
+    background-color: var(--amber); color: var(--fg);
+    border: 2px solid #000; border-radius: 6px;
+    font: 700 .9rem var(--font-body); height: 40px; padding: 0 24px 0 10px;
+    background-image: linear-gradient(45deg, transparent 50%, var(--fg) 50%), linear-gradient(135deg, var(--fg) 50%, transparent 50%);
+    background-position: calc(100% - 14px) 17px, calc(100% - 9px) 17px;
+    background-size: 5px 5px; background-repeat: no-repeat;
+  }
+  .menu-btn {
+    display: none; flex: none; position: relative; width: 44px; height: 44px; padding: 0;
+    background: transparent; border: 2px solid #000; border-radius: 6px; cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .menu-btn span {
+    position: absolute; left: 9px; right: 9px; top: calc(50% - 1.25px); height: 2.5px;
+    background: var(--fg); border-radius: 2px;
+    transition: transform .25s ease, opacity .2s ease;
+  }
+  .menu-btn span:nth-child(1) { transform: translateY(-7px); }
+  .menu-btn span:nth-child(3) { transform: translateY(7px); }
+  .menu-btn.open span:nth-child(1) { transform: rotate(45deg); }
+  .menu-btn.open span:nth-child(2) { opacity: 0; }
+  .menu-btn.open span:nth-child(3) { transform: rotate(-45deg); }
+  .menu-panel {
+    display: none; position: absolute; top: 100%; left: 0; right: 0;
+    background: var(--amber); border-bottom: 1px solid rgba(43, 29, 14, .18);
+    box-shadow: 0 14px 24px rgba(43, 29, 14, .2);
+    max-height: calc(100vh - 80px); overflow-y: auto;
+    visibility: hidden; opacity: 0; transform: translateY(-8px);
+    transition: opacity .2s ease, transform .2s ease, visibility 0s linear .2s;
+  }
+  .menu-panel.open { visibility: visible; opacity: 1; transform: none; transition-delay: 0s; }
+  .menu-panel .wrap { display: grid; gap: 22px; padding-block: 6px 22px; }
+  .menu-links { display: grid; }
+  .menu-links a {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 15px 2px; min-height: 52px; text-decoration: none;
+    font-family: var(--font-display); font-size: 1.2rem; color: var(--fg);
+    border-bottom: 1px solid rgba(43, 29, 14, .16);
+  }
+  .menu-links a::after { content: "\203A"; font-size: 1.6rem; line-height: 1; color: var(--brown); }
+  .menu-links a:active { background: rgba(43, 29, 14, .07); }
+  .menu-lang-title { font-size: .78rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--brown); margin-bottom: 10px; }
+  .menu-lang-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .menu-lang-list button {
+    flex: 1 1 calc(33.333% - 8px); min-height: 44px; padding: 0 10px;
+    background: transparent; color: var(--fg); border: 2px solid #000; border-radius: 6px;
+    font: 700 .95rem var(--font-body); cursor: pointer;
+  }
+  .menu-lang-list button[aria-pressed="true"] { background: var(--fg); color: var(--amber); border-color: var(--fg); }
+
+  /* gumbi */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 48px; padding: 0 20px; border-radius: 6px; font-weight: 700; text-decoration: none;
+    border: 2px solid var(--fg); cursor: pointer; font-family: var(--font-body); font-size: 1rem;
+  }
+  .btn-primary { background: var(--gold); color: var(--fg); border-color: var(--fg); }
+  .btn-outline { background: transparent; color: var(--fg); }
+  .btn:hover { box-shadow: 0 3px 0 var(--fg); transform: translateY(-1px); }
+
+  /* stran */
+  .page { padding-block: clamp(28px, 5vw, 56px) clamp(48px, 8vw, 88px); }
+  .back { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; text-decoration: none; color: var(--link); min-height: 44px; }
+  .back:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .page-head { display: grid; gap: 8px; margin: 6px 0 26px; max-width: 60ch; }
+  .page-head h1 { font-size: clamp(2.1rem, 6vw, 3rem); }
+  .page-head p { color: var(--muted); }
+  .demo { margin: 0 0 22px; padding: 10px 14px; border: 2px dashed var(--link); border-radius: 8px; background: rgba(254, 246, 89, .35); font-weight: 600; font-size: .95rem; }
+
+  /* seznam hiš */
+  .houses { list-style: none; margin: 0; padding: 0; display: grid; gap: 22px; counter-reset: house; }
+  .house { counter-increment: house; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 6px 18px rgba(43, 29, 14, .08); overflow: hidden; }
+  .house summary { list-style: none; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .house summary::-webkit-details-marker { display: none; }
+  .house summary:focus-visible { outline-offset: -3px; }
+  .h-photo { position: relative; aspect-ratio: 4 / 3; background: var(--amber); overflow: hidden; }
+  .h-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+  .house summary:hover .h-photo img { transform: scale(1.03); }
+  .h-num {
+    position: absolute; left: 14px; top: 14px; min-width: 46px; height: 46px; padding: 0 12px;
+    display: grid; place-items: center; border-radius: 999px;
+    background: var(--amber); color: var(--fg); border: 2px solid var(--fg);
+    font-family: var(--font-display); font-size: 1.5rem; line-height: 1;
+  }
+  .h-num::before { content: counter(house); }
+  .h-info { display: grid; gap: 16px; align-content: center; padding: 24px 28px; min-width: 0; }
+  .h-name { font-size: clamp(1.6rem, 4vw, 2.1rem); }
+  .house summary:hover .h-name { color: var(--link); }
+  .chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+  .chips li { display: grid; gap: 2px; padding: 8px 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); min-width: 0; }
+  .chips .k { font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--link); }
+  .chips .v { font-weight: 700; font-size: 1.1rem; }
+  .h-more { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; color: var(--link); }
+  .h-more .t-open { display: none; }
+  .house details[open] .h-more .t-open { display: inline; }
+  .house details[open] .h-more .t-closed { display: none; }
+  .chev { width: 10px; height: 10px; border-right: 2.5px solid currentColor; border-bottom: 2.5px solid currentColor; transform: translateY(-3px) rotate(45deg); transition: transform .25s ease; }
+  .house details[open] .chev { transform: translateY(2px) rotate(-135deg); }
+
+  .h-body { display: grid; gap: 26px; padding: 8px 28px 28px; border-top: 1px solid var(--line); }
+  .h-body > * { min-width: 0; }
+  .h-desc { max-width: 70ch; margin-top: 14px; }
+  .h-sub { font-size: .78rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--link); margin: 0 0 6px; font-family: var(--font-body); }
+  .specs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 32px; margin: 0; }
+  .specs .row { display: grid; grid-template-columns: minmax(7rem, 42%) 1fr; gap: 2px 14px; align-items: baseline; padding: 11px 0; border-top: 1px solid var(--line); }
+  .specs .row:nth-child(-n+2) { border-top: 0; }
+  .specs dt { font-size: .74rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--link); }
+  .specs dd { margin: 0; font-size: 1.08rem; font-weight: 600; overflow-wrap: anywhere; }
+  .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
+  .thumb { position: relative; display: block; padding: 0; border: 0; border-radius: 8px; overflow: hidden; background: var(--amber); aspect-ratio: 4 / 3; cursor: zoom-in; }
+  .thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
+  .thumb:hover img { transform: scale(1.05); }
+  .h-cta { display: flex; flex-wrap: wrap; gap: 12px; }
+
+  /* lightbox */
+  .lb { width: 100vw; height: 100vh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; color: #fff; }
+  .lb::backdrop { background: rgba(20, 12, 4, .92); }
+  .lb[open] { display: grid; place-items: center; }
+  .lb-inner { display: grid; gap: 10px; justify-items: center; width: min(96vw, 1100px); }
+  .lb-stage { position: relative; display: grid; place-items: center; max-width: 100%; touch-action: pan-y; }
+  .lb-img { max-width: 100%; max-height: 80vh; border-radius: 6px; object-fit: contain; background: #000; }
+  .lb-count { font-weight: 700; letter-spacing: .06em; }
+  .lb-btn {
+    position: absolute; width: 48px; height: 48px; border-radius: 999px; padding: 0;
+    border: 2px solid #fff; background: rgba(20, 12, 4, .6); color: #fff;
+    display: grid; place-items: center; font-size: 1.7rem; line-height: 1; cursor: pointer;
+  }
+  .lb-btn:hover { background: rgba(20, 12, 4, .85); }
+  .lb-close { top: 10px; right: 10px; }
+  .lb-prev { left: 10px; top: calc(50% - 24px); }
+  .lb-next { right: 10px; top: calc(50% - 24px); }
+
+  footer { background: var(--amber); color: var(--fg); padding-block: 22px; font-size: .9rem; border-top: 1px solid rgba(43, 29, 14, .18); }
+  footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
+  footer .draft { font-weight: 700; }
+
+  @media (max-width: 860px) {
+    .head-nav, .lang { display: none; }
+    .menu-btn { display: block; }
+    .menu-panel { display: block; }
+    :root { --head-h: 65px; }
+    .site-head .wrap { min-height: 64px; }
+  }
+  @media (max-width: 760px) {
+    .house summary { grid-template-columns: 1fr; }
+    .h-info { padding: 18px 18px 20px; }
+    .h-body { padding: 4px 18px 22px; }
+    .specs { grid-template-columns: 1fr; }
+    .specs .row:nth-child(2) { border-top: 1px solid var(--line); }
+    .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 640px) {
+    body { font-size: 16px; }
+    .brand img { width: 40px; height: 48px; }
+    .h-cta .btn { flex: 1 1 100%; }
+    .lb-btn { width: 44px; height: 44px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .h-photo img, .thumb img, .chev, .btn { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-label="Alp-les Celje, Andrej Lesjak">
+      <img src="logo_brez_ozadja.png" width="40" height="48" alt="" aria-hidden="true">
+      <span class="brand-text"><span class="brand-name">ALP-LES CELJE</span><span class="brand-owner">Andrej Lesjak</span></span>
+    </a>
+    <nav class="head-nav" aria-label="Main">
+      <a href="index.html#objekti" data-i18n="nav_objects">Objekti</a>
+      <a href="index.html#pomembne-informacije" data-i18n="nav_info">Pomembne informacije</a>
+      <a href="index.html#galerija" data-i18n="nav_gallery">Galerija</a>
+      <a href="index.html#kontakt" data-i18n="nav_contact">Kontakt</a>
+    </nav>
+    <label for="lang" style="position:absolute;left:-9999px">Language</label>
+    <select id="lang" class="lang">
+      <option value="sl" title="Slovenščina">SI</option>
+      <option value="de" title="Deutsch">DE</option>
+      <option value="it" title="Italiano">IT</option>
+      <option value="en" title="English">EN</option>
+      <option value="hr" title="Hrvatski">HR</option>
+      <option value="sr" title="Srpski">SRB</option>
+    </select>
+    <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="menu-panel" aria-label="Meni"><span></span><span></span><span></span></button>
+  </div>
+  <div class="menu-panel" id="menu-panel">
+    <div class="wrap">
+      <nav class="menu-links" aria-label="Navigacija">
+        <a href="index.html#objekti" data-i18n="nav_objects">Objekti</a>
+        <a href="index.html#pomembne-informacije" data-i18n="nav_info">Pomembne informacije</a>
+        <a href="index.html#galerija" data-i18n="nav_gallery">Galerija</a>
+        <a href="index.html#kontakt" data-i18n="nav_contact">Kontakt</a>
+      </nav>
+      <div>
+        <div class="menu-lang-title" data-i18n="nav_lang">Jezik</div>
+        <div class="menu-lang-list" role="group" aria-label="Language">
+          <button type="button" data-lang="sl" lang="sl">Slovenščina</button>
+          <button type="button" data-lang="de" lang="de">Deutsch</button>
+          <button type="button" data-lang="it" lang="it">Italiano</button>
+          <button type="button" data-lang="en" lang="en">English</button>
+          <button type="button" data-lang="hr" lang="hr">Hrvatski</button>
+          <button type="button" data-lang="sr" lang="sr">Srpski</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="page">
+    <div class="wrap">
+      <a class="back" href="index.html#objekti"><span aria-hidden="true">&larr;</span><span data-i18n="back">Vsi objekti</span></a>
+      <div class="page-head">
+        <h1 data-i18n="h_title">Vrtne hiše</h1>
+        <p data-i18n="h_intro">Kliknite na hišo za več podatkov in slik.</p>
+      </div>
+      <p class="demo" id="demo" hidden data-i18n="demo">Poskusna stran: podatki in mere so vzorčni, slike so izrezi iste fotografije.</p>
+      <ol class="houses" id="houses"></ol>
+      <noscript><p>Za ogled hiš je potreben JavaScript.</p></noscript>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© Alp-les Celje · Andrej Lesjak</span>
+    <span class="draft" data-i18n="draft">Osnutek domače strani</span>
+  </div>
+</footer>
+
+<dialog class="lb" id="lb" aria-label="Slika">
+  <div class="lb-inner">
+    <div class="lb-stage">
+      <img class="lb-img" id="lb-img" alt="">
+      <button class="lb-btn lb-close" id="lb-close" type="button" aria-label="Zapri">&times;</button>
+      <button class="lb-btn lb-prev" id="lb-prev" type="button" aria-label="Prejšnja slika">&#8249;</button>
+      <button class="lb-btn lb-next" id="lb-next" type="button" aria-label="Naslednja slika">&#8250;</button>
+    </div>
+    <div class="lb-count" id="lb-count"></div>
+  </div>
+</dialog>
+
+<script>
+(function () {
+  /* ------------------------------------------------------------------
+     PODATKI O HIŠAH
+     Nova hiša = nov objekt v seznamu HOUSES. Št. hiše se šteje samodejno.
+     Slike: mapa slike/vrtne-hise/<številka>/ ; prva slika je glavna.
+     Besedilo opisa je po jezikih; če jezika ni, se prikaže slovenski.
+     ------------------------------------------------------------------ */
+  var DEMO = true; /* na false, ko so vneseni pravi podatki: skrije opozorilo na vrhu */
+
+  var HOUSES = [
+    {
+      dim: '3 × 4 m', area: '12 m²', wall: '28 mm',
+      wood: 'v_wood', roof: 'v_roof', mount: 'v_mount',
+      desc: {
+        sl: 'Vzorčni opis hiše. Tu bo kratek opis: za kaj je hiša primerna, kakšne so možnosti prilagoditve (okna, vrata, barva, dodatni shrambni prostor) in kaj je vključeno v ceno. Vsak objekt izdelamo po naročilu.'
+      },
+      images: [
+        'slike/vrtne-hise/1/01.jpg', 'slike/vrtne-hise/1/02.jpg', 'slike/vrtne-hise/1/03.jpg',
+        'slike/vrtne-hise/1/04.jpg', 'slike/vrtne-hise/1/05.jpg'
+      ]
+    }
+  ];
+
+  var T = {
+    sl: { nav_lang:"Jezik", nav_objects:"Objekti", nav_info:"Pomembne informacije", nav_gallery:"Galerija", nav_contact:"Kontakt", nav_menu:"Meni",
+      back:"Vsi objekti", h_title:"Vrtne hiše", h_intro:"Kliknite na hišo za več podatkov in slik.", house:"Vrtna hiša",
+      s_dim:"Zunanje mere", s_area:"Površina", s_wall:"Debelina sten", s_wood:"Material", s_roof:"Streha", s_mount:"Montaža",
+      v_wood:"Smrekov les", v_roof:"Dvokapna", v_mount:"Vključena", more:"Več podatkov", less:"Skrij podatke", g_title:"Slike",
+      call:"Pokličite", enquire:"Pošljite povpraševanje", close:"Zapri", prev:"Prejšnja slika", next:"Naslednja slika", photo:"Slika",
+      demo:"Poskusna stran: podatki in mere so vzorčni, slike so izrezi iste fotografije.", draft:"Osnutek domače strani" },
+    hr: { nav_lang:"Jezik", nav_objects:"Objekti", nav_info:"Važne informacije", nav_gallery:"Galerija", nav_contact:"Kontakt", nav_menu:"Izbornik",
+      back:"Svi objekti", h_title:"Vrtne kućice", h_intro:"Kliknite na kućicu za više podataka i slika.", house:"Vrtna kućica",
+      s_dim:"Vanjske mjere", s_area:"Površina", s_wall:"Debljina zidova", s_wood:"Materijal", s_roof:"Krov", s_mount:"Montaža",
+      v_wood:"Smrekovo drvo", v_roof:"Dvovodni", v_mount:"Uključena", more:"Više podataka", less:"Sakrij podatke", g_title:"Slike",
+      call:"Nazovite", enquire:"Pošaljite upit", close:"Zatvori", prev:"Prethodna slika", next:"Sljedeća slika", photo:"Slika",
+      draft:"Nacrt početne stranice" },
+    sr: { nav_lang:"Jezik", nav_objects:"Objekti", nav_info:"Važne informacije", nav_gallery:"Galerija", nav_contact:"Kontakt", nav_menu:"Meni",
+      back:"Svi objekti", h_title:"Baštenske kućice", h_intro:"Kliknite na kućicu za više podataka i slika.", house:"Baštenska kućica",
+      s_dim:"Spoljne mere", s_area:"Površina", s_wall:"Debljina zidova", s_wood:"Materijal", s_roof:"Krov", s_mount:"Montaža",
+      v_wood:"Smrekovo drvo", v_roof:"Dvovodni", v_mount:"Uključena", more:"Više podataka", less:"Sakrij podatke", g_title:"Slike",
+      call:"Pozovite", enquire:"Pošaljite upit", close:"Zatvori", prev:"Prethodna slika", next:"Sledeća slika", photo:"Slika",
+      draft:"Nacrt početne stranice" },
+    de: { nav_lang:"Sprache", nav_objects:"Objekte", nav_info:"Wichtige Informationen", nav_gallery:"Galerie", nav_contact:"Kontakt", nav_menu:"Menü",
+      back:"Alle Objekte", h_title:"Gartenhäuser", h_intro:"Klicken Sie auf ein Haus für weitere Daten und Bilder.", house:"Gartenhaus",
+      s_dim:"Außenmaße", s_area:"Fläche", s_wall:"Wandstärke", s_wood:"Material", s_roof:"Dach", s_mount:"Montage",
+      v_wood:"Fichtenholz", v_roof:"Satteldach", v_mount:"Inklusive", more:"Mehr Daten", less:"Daten ausblenden", g_title:"Bilder",
+      call:"Anrufen", enquire:"Anfrage senden", close:"Schließen", prev:"Vorheriges Bild", next:"Nächstes Bild", photo:"Bild",
+      draft:"Entwurf der Startseite" },
+    en: { nav_lang:"Language", nav_objects:"Structures", nav_info:"Important information", nav_gallery:"Gallery", nav_contact:"Contact", nav_menu:"Menu",
+      back:"All structures", h_title:"Garden houses", h_intro:"Click a house for more details and photos.", house:"Garden house",
+      s_dim:"External size", s_area:"Area", s_wall:"Wall thickness", s_wood:"Material", s_roof:"Roof", s_mount:"Assembly",
+      v_wood:"Spruce wood", v_roof:"Gable roof", v_mount:"Included", more:"More details", less:"Hide details", g_title:"Photos",
+      call:"Call us", enquire:"Send an enquiry", close:"Close", prev:"Previous photo", next:"Next photo", photo:"Photo",
+      draft:"Home page draft" },
+    it: { nav_lang:"Lingua", nav_objects:"Strutture", nav_info:"Informazioni importanti", nav_gallery:"Galleria", nav_contact:"Contatti", nav_menu:"Menu",
+      back:"Tutte le strutture", h_title:"Casette da giardino", h_intro:"Clicca su una casetta per maggiori dettagli e foto.", house:"Casetta da giardino",
+      s_dim:"Dimensioni esterne", s_area:"Superficie", s_wall:"Spessore pareti", s_wood:"Materiale", s_roof:"Tetto", s_mount:"Montaggio",
+      v_wood:"Legno di abete", v_roof:"A due falde", v_mount:"Inclusa", more:"Più dettagli", less:"Nascondi dettagli", g_title:"Foto",
+      call:"Chiama", enquire:"Invia una richiesta", close:"Chiudi", prev:"Foto precedente", next:"Foto successiva", photo:"Foto",
+      draft:"Bozza della home page" }
+  };
+
+  var sel = document.getElementById('lang');
+  var menuBtn = document.getElementById('menu-btn');
+  var menuPanel = document.getElementById('menu-panel');
+  var langBtns = document.querySelectorAll('.menu-lang-list button');
+  var list = document.getElementById('houses');
+  var current = 'sl';
+
+  function el(tag, cls, attrs) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (attrs) for (var k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  function span(cls, key, text) {
+    var s = el('span', cls);
+    if (key) s.setAttribute('data-i18n', key);
+    if (text != null) s.textContent = text;
+    return s;
+  }
+
+  /* ---------- lightbox ---------- */
+  var lb = document.getElementById('lb');
+  var lbImg = document.getElementById('lb-img');
+  var lbCount = document.getElementById('lb-count');
+  var lbList = [];
+  var lbIdx = 0;
+
+  function lbShow(i) {
+    lbIdx = (i + lbList.length) % lbList.length;
+    lbImg.src = lbList[lbIdx];
+    lbImg.alt = T[current].photo + ' ' + (lbIdx + 1);
+    lbCount.textContent = (lbIdx + 1) + ' / ' + lbList.length;
+  }
+  function lbOpen(imgs, i) {
+    lbList = imgs;
+    lbShow(i);
+    lb.showModal();
+    document.documentElement.classList.add('lb-open');
+  }
+  document.getElementById('lb-close').addEventListener('click', function () { lb.close(); });
+  document.getElementById('lb-prev').addEventListener('click', function () { lbShow(lbIdx - 1); });
+  document.getElementById('lb-next').addEventListener('click', function () { lbShow(lbIdx + 1); });
+  lb.addEventListener('close', function () { document.documentElement.classList.remove('lb-open'); });
+  lb.addEventListener('click', function (e) {
+    if (e.target === lb || e.target.classList.contains('lb-inner')) lb.close();
+  });
+  lb.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowLeft') lbShow(lbIdx - 1);
+    else if (e.key === 'ArrowRight') lbShow(lbIdx + 1);
+  });
+  var touchX = null;
+  lb.addEventListener('touchstart', function (e) { touchX = e.changedTouches[0].clientX; }, { passive: true });
+  lb.addEventListener('touchend', function (e) {
+    if (touchX == null) return;
+    var dx = e.changedTouches[0].clientX - touchX;
+    touchX = null;
+    if (Math.abs(dx) > 50) lbShow(lbIdx + (dx < 0 ? 1 : -1));
+  }, { passive: true });
+
+  /* ---------- seznam hiš ---------- */
+  function buildHouse(h, n) {
+    var li = el('li', 'house', { id: 'hisa-' + n });
+    var det = el('details');
+    var sum = el('summary');
+
+    var photo = el('div', 'h-photo');
+    var img = el('img', null, { src: h.images[0], alt: '', width: '800', height: '600', 'data-house-alt': n });
+    var num = el('span', 'h-num', { 'aria-hidden': 'true' });
+    photo.appendChild(img);
+    photo.appendChild(num);
+
+    var info = el('div', 'h-info');
+    var name = el('h2', 'h-name', { 'data-house-name': n });
+    var chips = el('ul', 'chips');
+    [['s_dim', h.dim], ['s_area', h.area], ['s_wall', h.wall]].forEach(function (p) {
+      var c = el('li');
+      c.appendChild(span('k', p[0]));
+      c.appendChild(span('v', null, p[1]));
+      chips.appendChild(c);
+    });
+    var more = el('span', 'h-more');
+    more.appendChild(span('t-closed', 'more'));
+    more.appendChild(span('t-open', 'less'));
+    more.appendChild(el('span', 'chev', { 'aria-hidden': 'true' }));
+    info.appendChild(name);
+    info.appendChild(chips);
+    info.appendChild(more);
+
+    sum.appendChild(photo);
+    sum.appendChild(info);
+    det.appendChild(sum);
+
+    var body = el('div', 'h-body');
+    body.appendChild(el('p', 'h-desc', { 'data-house-desc': n }));
+
+    var specs = el('dl', 'specs');
+    [['s_dim', h.dim, false], ['s_area', h.area, false], ['s_wall', h.wall, false],
+     ['s_wood', h.wood, true], ['s_roof', h.roof, true], ['s_mount', h.mount, true]].forEach(function (p) {
+      var row = el('div', 'row');
+      var dt = el('dt', null, { 'data-i18n': p[0] });
+      var dd = el('dd');
+      if (p[2]) dd.setAttribute('data-i18n', p[1]); else dd.textContent = p[1];
+      row.appendChild(dt);
+      row.appendChild(dd);
+      specs.appendChild(row);
+    });
+    body.appendChild(specs);
+
+    var gwrap = el('div');
+    var gt = el('h3', 'h-sub', { 'data-i18n': 'g_title' });
+    var gal = el('div', 'gallery');
+    h.images.forEach(function (src, i) {
+      var b = el('button', 'thumb', { type: 'button', 'data-photo-label': i + 1 });
+      b.appendChild(el('img', null, { src: src, alt: '', loading: 'lazy', width: '800', height: '600' }));
+      b.addEventListener('click', function () { lbOpen(h.images, i); });
+      gal.appendChild(b);
+    });
+    gwrap.appendChild(gt);
+    gwrap.appendChild(gal);
+    body.appendChild(gwrap);
+
+    var cta = el('div', 'h-cta');
+    var call = el('a', 'btn btn-primary', { href: 'tel:+38641622700' });
+    call.appendChild(span(null, 'call'));
+    call.appendChild(document.createTextNode(' 041 622 700'));
+    var mail = el('a', 'btn btn-outline', { href: 'mailto:info@alp-les.com', 'data-enquire': n });
+    mail.appendChild(span(null, 'enquire'));
+    cta.appendChild(call);
+    cta.appendChild(mail);
+    body.appendChild(cta);
+
+    det.appendChild(body);
+    li.appendChild(det);
+    return li;
+  }
+
+  HOUSES.forEach(function (h, i) { list.appendChild(buildHouse(h, i + 1)); });
+
+  /* ---------- jeziki in meni (enako kot na index.html) ---------- */
+  function apply(lang) {
+    if (!T[lang]) lang = 'sl';
+    current = lang;
+    var d = T[lang];
+    document.documentElement.lang = lang;
+    document.title = d.h_title + ' | Alp-les Celje';
+    document.querySelectorAll('[data-i18n]').forEach(function (e) {
+      var k = e.getAttribute('data-i18n');
+      if (d[k] != null) e.textContent = d[k];
+    });
+    document.querySelectorAll('[data-house-name]').forEach(function (e) {
+      e.textContent = d.house + ' ' + e.getAttribute('data-house-name');
+    });
+    document.querySelectorAll('[data-house-alt]').forEach(function (e) {
+      e.alt = d.house + ' ' + e.getAttribute('data-house-alt');
+    });
+    document.querySelectorAll('[data-house-desc]').forEach(function (e) {
+      var h = HOUSES[Number(e.getAttribute('data-house-desc')) - 1];
+      e.textContent = h.desc[lang] || h.desc.sl;
+    });
+    document.querySelectorAll('[data-photo-label]').forEach(function (e) {
+      e.setAttribute('aria-label', d.photo + ' ' + e.getAttribute('data-photo-label'));
+    });
+    document.querySelectorAll('[data-enquire]').forEach(function (e) {
+      e.href = 'mailto:info@alp-les.com?subject=' + encodeURIComponent(d.house + ' ' + e.getAttribute('data-enquire'));
+    });
+    document.getElementById('demo').hidden = !DEMO;
+    document.getElementById('lb-close').setAttribute('aria-label', d.close);
+    document.getElementById('lb-prev').setAttribute('aria-label', d.prev);
+    document.getElementById('lb-next').setAttribute('aria-label', d.next);
+    lb.setAttribute('aria-label', d.photo);
+    sel.value = lang;
+    langBtns.forEach(function (b) {
+      b.setAttribute('aria-pressed', b.getAttribute('data-lang') === lang ? 'true' : 'false');
+    });
+    menuBtn.setAttribute('aria-label', d.nav_menu);
+  }
+
+  function setMenu(open) {
+    menuPanel.classList.toggle('open', open);
+    menuBtn.classList.toggle('open', open);
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  function chooseLang(lang) {
+    apply(lang);
+    try { localStorage.setItem('alp-les-lang', lang); } catch (e) {}
+  }
+
+  function initial() {
+    var saved = null;
+    try { saved = localStorage.getItem('alp-les-lang'); } catch (e) {}
+    if (saved && T[saved]) return saved;
+    var nav = (navigator.language || 'sl').slice(0, 2).toLowerCase();
+    return T[nav] ? nav : 'sl';
+  }
+
+  sel.addEventListener('change', function () { chooseLang(sel.value); });
+  menuBtn.addEventListener('click', function () { setMenu(!menuPanel.classList.contains('open')); });
+  menuPanel.querySelectorAll('.menu-links a').forEach(function (a) {
+    a.addEventListener('click', function () { setMenu(false); });
+  });
+  langBtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      chooseLang(b.getAttribute('data-lang'));
+      setMenu(false);
+    });
+  });
+  document.addEventListener('click', function (e) {
+    if (menuPanel.classList.contains('open') && !e.target.closest('.site-head')) setMenu(false);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && menuPanel.classList.contains('open')) {
+      setMenu(false);
+      menuBtn.focus();
+    }
+  });
+  var wide = window.matchMedia('(min-width: 861px)');
+  var onWide = function (e) { if (e.matches) setMenu(false); };
+  if (wide.addEventListener) wide.addEventListener('change', onWide);
+  else if (wide.addListener) wide.addListener(onWide);
+
+  apply(initial());
+
+  /* povezava vrtne-hise.html#hisa-1 odpre prvo hišo */
+  var m = /^#hisa-(\d+)$/.exec(location.hash);
+  if (m) {
+    var target = document.getElementById('hisa-' + m[1]);
+    if (target) {
+      target.querySelector('details').open = true;
+      target.scrollIntoView();
+    }
+  }
+})();
+</script>
+
+</body>
+</html>
