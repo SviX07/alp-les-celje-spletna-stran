@@ -32,7 +32,10 @@
   body {
     margin: 0; background: var(--bg); color: var(--fg);
     font-family: var(--font-body); font-size: 17px; line-height: 1.55;
+    min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column;
   }
+  main { flex: 1 0 auto; }
+  footer { flex-shrink: 0; }
   img { display: block; max-width: 100%; }
   a { color: inherit; }
   h1, h2, h3 { font-family: var(--font-display); font-weight: 400; margin: 0; text-wrap: balance; line-height: 1.1; }
@@ -129,7 +132,6 @@
   .page-head { display: grid; gap: 8px; margin: 6px 0 26px; max-width: 60ch; }
   .page-head h1 { font-size: clamp(2.1rem, 6vw, 3rem); }
   .page-head p { color: var(--muted); }
-  .demo { margin: 0 0 22px; padding: 10px 14px; border: 2px dashed var(--link); border-radius: 8px; background: rgba(254, 246, 89, .35); font-weight: 600; font-size: .95rem; }
 
   /* seznam hiš */
   .houses { list-style: none; margin: 0; padding: 0; display: grid; gap: 22px; counter-reset: house; }
@@ -167,14 +169,10 @@
   .h-body > * { min-width: 0; }
   .h-desc { max-width: 70ch; margin-top: 14px; }
   .h-sub { font-size: .78rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--link); margin: 0 0 6px; font-family: var(--font-body); }
-  .specs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 32px; margin: 0; }
-  .specs .row { display: grid; grid-template-columns: minmax(7rem, 42%) 1fr; gap: 2px 14px; align-items: baseline; padding: 11px 0; border-top: 1px solid var(--line); }
-  .specs .row:nth-child(-n+2) { border-top: 0; }
-  .specs dt { font-size: .74rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--link); }
-  .specs dd { margin: 0; font-size: 1.08rem; font-weight: 600; overflow-wrap: anywhere; }
   .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
   .thumb { position: relative; display: block; padding: 0; border: 0; border-radius: 8px; overflow: hidden; background: var(--amber); aspect-ratio: 4 / 3; cursor: zoom-in; }
   .thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
+  .thumb img[src*="nacrt"] { object-fit: contain; background: #fff; }
   .thumb:hover img { transform: scale(1.05); }
   .h-cta { display: flex; flex-wrap: wrap; gap: 12px; }
 
@@ -211,9 +209,7 @@
     .house summary { grid-template-columns: 1fr 1fr; }
     .h-info { grid-column: 1 / -1; padding: 14px 18px 16px; }
     .h-body { padding: 4px 18px 22px; }
-    .specs { grid-template-columns: 1fr; }
-    .specs .row:nth-child(2) { border-top: 1px solid var(--line); }
-    .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   @media (max-width: 640px) {
     body { font-size: 16px; }
@@ -283,7 +279,6 @@
         <h1 data-i18n="h_title">Vrtne hiše</h1>
         <p data-i18n="h_intro">Kliknite na hišo za več podatkov in slik.</p>
       </div>
-      <p class="demo" id="demo" hidden data-i18n="demo">Poskusna stran: podatki in mere so vzorčni, slike so izrezi iste fotografije.</p>
       <ol class="houses" id="houses"></ol>
       <noscript><p>Za ogled hiš je potreben JavaScript.</p></noscript>
     </div>
@@ -317,7 +312,6 @@
      Slike: mapa slike/vrtne-hise/<številka>/ ; prva slika je glavna.
      Besedilo opisa je po jezikih; če jezika ni, se prikaže slovenski.
      ------------------------------------------------------------------ */
-  var DEMO = true; /* na false, ko so vneseni pravi podatki: skrije opozorilo na vrhu */
 
   var HOUSES = [
     {
@@ -328,8 +322,7 @@
         sl: 'Vzorčni opis hiše. Tu bo kratek opis: za kaj je hiša primerna, kakšne so možnosti prilagoditve (okna, vrata, barva, dodatni shrambni prostor) in kaj je vključeno v ceno. Vsak objekt izdelamo po naročilu.'
       },
       images: [
-        'slike/vrtne-hise/1/01.jpg', 'slike/vrtne-hise/1/02.jpg', 'slike/vrtne-hise/1/03.jpg',
-        'slike/vrtne-hise/1/04.jpg', 'slike/vrtne-hise/1/05.jpg',
+        'slike/vrtne-hise/1/01.jpg', 'slike/vrtne-hise/1/02.jpg',
         'slike/vrtne-hise/1/vrtna-hisa1nacrt.jpg'
       ]
     }
@@ -341,7 +334,7 @@
       s_dim:"Zunanje mere", s_area:"Površina", s_wall:"Debelina sten", s_wood:"Material", s_roof:"Streha", s_mount:"Montaža", s_plan:"Načrt",
       v_wood:"Smrekov les", v_roof:"Dvokapna", v_mount:"Vključena", more:"Več podatkov", less:"Skrij podatke", g_title:"Slike",
       call:"Pokličite", enquire:"Pošljite povpraševanje", close:"Zapri", prev:"Prejšnja slika", next:"Naslednja slika", photo:"Slika",
-      demo:"Poskusna stran: podatki in mere so vzorčni, slike so izrezi iste fotografije.", draft:"Osnutek domače strani" },
+      draft:"Osnutek domače strani" },
     hr: { nav_lang:"Jezik", nav_objects:"Objekti", nav_info:"Važne informacije", nav_gallery:"Galerija", nav_contact:"Kontakt", nav_menu:"Izbornik",
       back:"Svi objekti", h_title:"Vrtne kućice", h_intro:"Kliknite na kućicu za više podataka i slika.", house:"Vrtna kućica",
       s_dim:"Vanjske mjere", s_area:"Površina", s_wall:"Debljina zidova", s_wood:"Materijal", s_roof:"Krov", s_mount:"Montaža", s_plan:"Nacrt",
@@ -472,18 +465,6 @@
     var body = el('div', 'h-body');
     body.appendChild(el('p', 'h-desc', { 'data-house-desc': n }));
 
-    var specs = el('dl', 'specs');
-    [['s_dim', h.dim, false], ['s_area', h.area, false], ['s_wall', h.wall, false],
-     ['s_wood', h.wood, true], ['s_roof', h.roof, true], ['s_mount', h.mount, true]].forEach(function (p) {
-      var row = el('div', 'row');
-      var dt = el('dt', null, { 'data-i18n': p[0] });
-      var dd = el('dd');
-      if (p[2]) dd.setAttribute('data-i18n', p[1]); else dd.textContent = p[1];
-      row.appendChild(dt);
-      row.appendChild(dd);
-      specs.appendChild(row);
-    });
-    body.appendChild(specs);
 
     var gwrap = el('div');
     var gt = el('h3', 'h-sub', { 'data-i18n': 'g_title' });
@@ -545,7 +526,6 @@
     document.querySelectorAll('[data-enquire]').forEach(function (e) {
       e.href = 'mailto:info@alp-les.com?subject=' + encodeURIComponent(d.house + ' ' + e.getAttribute('data-enquire'));
     });
-    document.getElementById('demo').hidden = !DEMO;
     document.getElementById('lb-close').setAttribute('aria-label', d.close);
     document.getElementById('lb-prev').setAttribute('aria-label', d.prev);
     document.getElementById('lb-next').setAttribute('aria-label', d.next);
